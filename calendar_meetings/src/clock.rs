@@ -47,6 +47,11 @@ impl Clock {
     }
 }
 
+impl Default for Clock{
+    fn default() -> Self {
+        return Clock::new(0,0);
+    }
+}
 impl Display for Clock {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}",self.to_string())
@@ -123,3 +128,4 @@ impl Sub<Clock> for Clock {
     }
 
 }
+

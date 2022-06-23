@@ -1,0 +1,37 @@
+first release
+running 6 tests
+test bench_large_parallel   ... bench:     555,989 ns/iter (+/- 148,436)
+test bench_large_sequential ... bench:     529,688 ns/iter (+/- 142,082)
+test bench_small_parallel   ... bench:     224,261 ns/iter (+/- 21,200)
+test bench_small_sequential ... bench:      18,242 ns/iter (+/- 2,006)
+test bench_tiny_parallel    ... bench:     213,519 ns/iter (+/- 21,426)
+test bench_tiny_sequential  ... bench:         100 ns/iter (+/- 11)
+
+all sequential
+
+running 6 tests
+test bench_large_parallel   ... bench:     399,398 ns/iter (+/- 113,563)
+test bench_large_sequential ... bench:     525,671 ns/iter (+/- 20,546)
+test bench_small_parallel   ... bench:     101,152 ns/iter (+/- 7,495)
+test bench_small_sequential ... bench:      18,024 ns/iter (+/- 1,136)
+test bench_tiny_parallel    ... bench:      89,666 ns/iter (+/- 6,153)
+test bench_tiny_sequential  ... bench:          98 ns/iter (+/- 12)
+
+again parallel
+
+running 6 tests
+test bench_large_parallel   ... bench:     436,459 ns/iter (+/- 24,950)
+test bench_large_sequential ... bench:     521,786 ns/iter (+/- 26,839)
+test bench_small_parallel   ... bench:     195,985 ns/iter (+/- 15,504)
+test bench_small_sequential ... bench:      18,459 ns/iter (+/- 2,033)
+test bench_tiny_parallel    ... bench:     189,730 ns/iter (+/- 9,525)
+test bench_tiny_sequential  ... bench:          99 ns/iter (+/- 13)
+
+marco:
+test bench_large_parallel   ... bench:     485,955 ns/iter (+/- 100,860)
+test bench_large_sequential ... bench:     555,132 ns/iter (+/- 24,937)
+test bench_small_parallel   ... bench:     197,672 ns/iter (+/- 19,034)
+test bench_small_sequential ... bench:      18,967 ns/iter (+/- 969)
+test bench_tiny_parallel    ... bench:     192,148 ns/iter (+/- 16,391)
+test bench_tiny_sequential  ... bench:         113 ns/iter (+/- 7)
+
