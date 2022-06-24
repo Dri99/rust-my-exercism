@@ -2,6 +2,7 @@
 *.bk
 .DS_Store
 **/target
+**/.idea
 tmp
 bin/configlet
 bin/configlet.exe
