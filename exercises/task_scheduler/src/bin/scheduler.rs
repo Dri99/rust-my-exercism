@@ -1,8 +1,8 @@
-use std::{fs, process, sync::mpsc, thread};
-use std::collections::VecDeque;
-use std::io::{Write};
-use std::process::{ChildStdin, Stdio};
 use clap::{Arg, Parser};
+use std::collections::VecDeque;
+use std::io::Write;
+use std::process::{ChildStdin, Stdio};
+use std::{fs, process, sync::mpsc, thread};
 use task_scheduler::scheduler_message;
 use task_scheduler::scheduler_message::Message;
 
@@ -20,7 +20,8 @@ fn main() {
         .args([
             Arg::new("task_file").index(1).required(true),
             Arg::new("child_num")
-                .long("child_num").short('n')
+                .long("child_num")
+                .short('n')
                 .value_parser(clap::value_parser!(u8))
                 .default_value("2"),
         ])
@@ -55,7 +56,6 @@ fn main() {
 
     let (send, rec) = mpsc::channel::<(Message, u8)>();
 
-
     for i in 0..procs {
         let mut child = process::Command::new("./worker.exe")
             .arg(file_name)
@@ -77,7 +77,8 @@ fn main() {
     let mut lock_owner = -1;
     let mut requests: VecDeque<u8> = VecDeque::new();
     while !done {
-        if requests.len() != 0 && lock_owner == -1 { //I can grant one request
+        if requests.len() != 0 && lock_owner == -1 {
+            //I can grant one request
             let from = requests.pop_front().unwrap();
             lock_owner = from as i32;
             // let msg_for_child =  format!("{}",Message::LockGrant);
@@ -100,7 +101,10 @@ fn main() {
                 if lock_owner == msg.1 as i32 {
                     lock_owner = -1;
                 } else {
-                    panic!("Lock release from unexpected worker:{}, was of {}", msg.1, lock_owner);
+                    panic!(
+                        "Lock release from unexpected worker:{}, was of {}",
+                        msg.1, lock_owner
+                    );
                 }
             }
             Message::Done => {
@@ -109,20 +113,28 @@ fn main() {
             }
             _ => eprintln!("Received unexpected msg from {}:{}", msg.1, msg.0),
         };
-        println!("Received {}", msg.0);
+        println!("Received {} from {}", msg.0, msg.1);
+    }
+    println!("Received one done, waiting for all to finish");
+    for thread in threads{
+        thread.join().unwrap();
     }
 }
 
-fn scheduler_thread(nth: u8, sender: mpsc::Sender<(Message, u8)>, stdout: process::ChildStdout) -> () {
+fn scheduler_thread(
+    nth: u8,
+    sender: mpsc::Sender<(Message, u8)>,
+    stdout: process::ChildStdout,
+) -> () {
     let mut reader = scheduler_message::MessageReader::new(stdout);
     let mut done = false;
 
     while !done {
-        let to_send = reader.read();/* {
-            Message::LockReq => Message::LockReqFrom(nth),
-            req => req
-        };*/
+        let to_send = reader.read();
         done = to_send == Message::Done;
+        if let Message::Err(_str) = &to_send {
+            done = true;
+        }
         if let Err(e) = sender.send((to_send, nth)) {
             eprintln!("Error in channel-{nth}: {}, closing connection", e);
             done = true;
@@ -131,12 +143,8 @@ fn scheduler_thread(nth: u8, sender: mpsc::Sender<(Message, u8)>, stdout: proces
     println!("Thread {nth} done");
 }
 
-fn manage_done(exclude: u8, stdins: &mut Vec<ChildStdin>) -> () {
-    stdins.iter_mut().enumerate().for_each(|(i, stdin)| {
-        if i != exclude as usize {
-            writeln!(stdin, "{}", Message::Done).unwrap_or_default();
-        }
+fn manage_done(_exclude: u8, stdins: &mut Vec<ChildStdin>) -> () {
+    stdins.iter_mut().for_each(|stdin| {
+        writeln!(stdin, "{}", Message::Done).unwrap_or_default();
     });
 }
-
-

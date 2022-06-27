@@ -23,7 +23,7 @@ pub mod scheduler_message {
                 };
                 return match sender {
                     Ok(num) => Message::LockReqFrom(num),
-                    Err(e) => Message::Err(format!("{}",e)),
+                    Err(e) => Message::Err(format!("{}", e)),
                 };
             }
             return match msg {
@@ -38,7 +38,7 @@ pub mod scheduler_message {
 
     impl Debug for Message {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            write!(f, "{}",self)
+            write!(f, "{}", self)
         }
     }
 
@@ -47,13 +47,15 @@ pub mod scheduler_message {
     impl Display for Message {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             return match self {
-                Message::LockReqFrom(sender) => write!(f,"req_lock:{}",sender.to_string()),
-                Message::LockReleaseFrom(sender) => write!(f,"lock_release:{}",sender.to_string()),
-                Message::LockReq => write!(f,"req_lock"),
-                Message::LockGrant => write!(f,"lock_granted"),
-                Message::LockRelease =>  write!(f,"lock_release"),
-                Message::Done =>  write!(f,"done"),
-                Message::Err(what) =>  write!(f,"error:{}",what),
+                Message::LockReqFrom(sender) => write!(f, "req_lock:{}", sender.to_string()),
+                Message::LockReleaseFrom(sender) => {
+                    write!(f, "lock_release:{}", sender.to_string())
+                }
+                Message::LockReq => write!(f, "req_lock"),
+                Message::LockGrant => write!(f, "lock_granted"),
+                Message::LockRelease => write!(f, "lock_release"),
+                Message::Done => write!(f, "done"),
+                Message::Err(what) => write!(f, "error:{}", what),
             };
         }
     }
@@ -65,7 +67,9 @@ pub mod scheduler_message {
 
     impl<T: Read> MessageReader<T> {
         pub fn new(inner: T) -> Self {
-            MessageReader { reader: BufReader::new(inner) /*buf:String::default()*/ }
+            MessageReader {
+                reader: BufReader::new(inner), /*buf:String::default()*/
+            }
         }
 
         pub fn read(&mut self) -> Message {
@@ -77,7 +81,7 @@ pub mod scheduler_message {
                     }
                     trim_newline(&mut buf);
                     Message::from(buf.as_str())
-                },
+                }
                 Err(e) => Message::Err(format!("Error in pipe read:{}", e)),
             };
         }
@@ -92,4 +96,3 @@ pub mod scheduler_message {
         }
     }
 }
-

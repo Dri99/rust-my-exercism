@@ -5,11 +5,13 @@ edition = "2021"
 
 [[bin]]
 name = "worker"
+path = "src/bin/worker.rs"
 
 [[bin]]
 name = "scheduler"
+path = "src/bin/scheduler.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-clap = { version = "3.2.6", features = ["derive"] }
+clap = { version = "3.1.18", features = ["derive"] }
