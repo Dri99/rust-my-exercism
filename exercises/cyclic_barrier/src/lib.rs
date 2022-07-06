@@ -3,24 +3,11 @@ pub mod cb {
 
     pub struct CyclicBarrier {
         count: u8,
-        //in_barrier: Arc<u8>,
-        //emptying : Mutex<bool>,
-        //cv: Condvar,
-        //shared: Arc<SharedData>,
         cv_enter: Condvar,
         cv_exit: Condvar,
         filling: Mutex<bool>,
-        //emptying: Mutex<bool>,
         in_barrier: RwLock<u8>,
     }
-
-    // struct SharedData {
-    //     cv_enter: Condvar,
-    //     cv_exit: Condvar,
-    //     filling: Mutex<bool>,
-    //     //emptying: Mutex<bool>,
-    //     in_barrier: Cell<u8>,
-    // }
 
     impl CyclicBarrier {
 
@@ -43,7 +30,6 @@ pub mod cb {
                 self.cv_enter.notify_all();
             }
             drop(in_barrier_r);
-            //in barrier for real
             while !*filling {
                 filling = self.cv_enter.wait(filling).unwrap();
             }
@@ -70,10 +56,4 @@ pub mod cb {
             }
          }
      }
-
-    // impl Clone for CyclicBarrier {
-    //     fn clone(&self) -> Self {
-    //         CyclicBarrier { count: self.count, shared: self.shared.clone() }
-    //     }
-    //}
 }
